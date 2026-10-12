@@ -19,13 +19,13 @@ pub struct Cli {
     file: std::path::PathBuf,
     
     // The top N frequent words to process and show
-    // top: u16,
+    top: usize,
 
     // //The contents of the file in String
     // result: String
 }
 
-pub fn top_n_words(content: &str, n: usize) -> Vec<(String, usize)> {
+pub fn top_n_words(content: &str, top: usize) -> Vec<(String, usize)> {
     let mut word_counts: HashMap<String, usize> = HashMap::new();
 
     for word in content.split_whitespace() {
@@ -46,7 +46,7 @@ pub fn top_n_words(content: &str, n: usize) -> Vec<(String, usize)> {
     let mut sorted: Vec<(String, usize)> = word_counts.into_iter().collect();
     // Highest count first; ties broken alphabetically so output is stable
     sorted.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
-    sorted.truncate(n);
+    sorted.truncate(top);
     sorted
 }
 
@@ -56,9 +56,10 @@ fn main() {
 
     let args = Cli::parse();
     let content = std::fs::read_to_string(&args.file, ).expect("File can not read"); 
-    let words = top_n_words(&content, 100);
+    let top = args.top;
+    let words = top_n_words(&content, top);
     println!("Path : {:?}", args.file);
     println!("Content is {:?} ", content);
-    println!("The top 10 words are: {:?}", words );
+    println!("The top {:?} words are: {:?}",top, words );
 
 }
