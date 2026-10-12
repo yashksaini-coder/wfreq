@@ -1,0 +1,60 @@
+# Basic C++ Competitive Programming Concepts
+
+## 1. The Standard Boilerplate Template
+In competitive programming, speed is key. Most programmers use a standard template to avoid typing the same foundational code repeatedly.
+
+```cpp
+#include <bits/stdc++.h> // Includes almost all standard C++ libraries
+using namespace std;
+
+#define ll long long
+#define pb push_back
+#define all(v) (v).begin(), (v).end()
+const int MOD = 1e9 + 7;
+
+void solve() {
+    // Your logic for a single test case goes here
+}
+
+int main() {
+    // Fast I/O
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    int t = 1;
+    cin >> t; // Read number of test cases if required
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
+```
+
+## 2. Fast Input/Output (I/O)
+Standard `cin` and `cout` are slow in C++ because they are synchronized with C's `stdio` libraries. 
+*   `ios_base::sync_with_stdio(false);` disables this synchronization.
+*   `cin.tie(NULL);` unties `cin` from `cout`, preventing automatic flushing of the output buffer before every input.
+*   *Always* use `\n` instead of `endl` for newlines, as `endl` forces a buffer flush which slows down execution significantly.
+
+## 3. Essential STL Containers
+The Standard Template Library (STL) provides highly optimized data structures:
+
+*   **Vector (`std::vector`)**: Dynamic arrays.
+    *   `vector<int> v;`
+    *   `v.push_back(5);` (Add to end)
+    *   `v.pop_back();` (Remove from end)
+*   **Pair (`std::pair`)**: Stores two heterogeneous objects as a single unit.
+    *   `pair<int, string> p = {1, "apple"};`
+    *   Access via `p.first` and `p.second`.
+*   **Set (`std::set`)**: Stores unique elements in sorted order (uses a Red-Black Tree). $O(\log N)$ for insertions/deletions.
+*   **Map (`std::map`)**: Key-value pairs stored in sorted order by key. $O(\log N)$ access.
+*   **Unordered Map/Set (`std::unordered_map`)**: Hash tables. Average $O(1)$ access time, but worst-case $O(N)$.
+
+## 4. Time Complexity Rules of Thumb
+Competitive programming platforms usually execute your code with a 1-2 second time limit. 
+A standard modern server can perform roughly $10^8$ operations per second.
+
+*   If $N \le 10^5$, your algorithm should be $O(N)$ or $O(N \log N)$.
+*   If $N \le 10^3$, your algorithm can be $O(N^2)$.
+*   If $N \le 500$, your algorithm can be $O(N^3)$.
+*   If $N \le 20$, your algorithm can be $O(2^N)$ (exponential/backtracking).

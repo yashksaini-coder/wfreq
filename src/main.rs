@@ -9,6 +9,56 @@
 //      - using a -- format flag for table, csv, plain,
 // Set default value to N, can configure the top limit
 
+use std::collections::HashMap;
+use clap::Parser;
+
+/// A fast CLI tool to count the top N most frequent words in supported files.
+#[derive(Parser, Debug)]
+pub struct Cli {
+    // A single filepath passed as input to CLI
+    file: std::path::PathBuf,
+    
+    // The top N frequent words to process and show
+    // top: u16,
+
+    // //The contents of the file in String
+    // result: String
+}
+
+pub fn top_n_words(content: &str, n: usize) -> Vec<(String, usize)> {
+    let mut word_counts: HashMap<String, usize> = HashMap::new();
+
+    for word in content.split_whitespace() {
+        let clean_word: String = word
+            .chars()
+            .filter(|c| c.is_alphanumeric() || *c == '\'')
+            .collect::<String>()
+            .to_lowercase();
+
+        // "--" or "..." becomes "" after filtering; skip it
+        if clean_word.is_empty() {
+            continue;
+        }
+
+        *word_counts.entry(clean_word).or_insert(0) += 1;
+    }
+
+    let mut sorted: Vec<(String, usize)> = word_counts.into_iter().collect();
+    // Highest count first; ties broken alphabetically so output is stable
+    sorted.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+    sorted.truncate(n);
+    sorted
+}
+
+
+
 fn main() {
-    println!("WordFreq Counter");
+
+    let args = Cli::parse();
+    let content = std::fs::read_to_string(&args.file, ).expect("File can not read"); 
+    let words = top_n_words(&content, 100);
+    println!("Path : {:?}", args.file);
+    println!("Content is {:?} ", content);
+    println!("The top 10 words are: {:?}", words );
+
 }
