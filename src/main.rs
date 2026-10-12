@@ -16,9 +16,11 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 pub struct Cli {
     // A single filepath passed as input to CLI
+    #[arg(required=true,num_args=1)]
     file: std::path::PathBuf,
     
     // The top N frequent words to process and show
+    #[arg(short, long, default_value_t = 10)]
     top: usize,
 
     // //The contents of the file in String
@@ -56,10 +58,10 @@ fn main() {
 
     let args = Cli::parse();
     let content = std::fs::read_to_string(&args.file, ).expect("File can not read"); 
-    let top = args.top;
-    let words = top_n_words(&content, top);
+    // let top = args.top;
+    let words = top_n_words(&content, args.top);
     println!("Path : {:?}", args.file);
     println!("Content is {:?} ", content);
-    println!("The top {:?} words are: {:?}",top, words );
+    println!("The top {:?} words are: {:?}",args.top, words );
 
 }
