@@ -13,13 +13,18 @@ use clap::Parser;
 use std::error::Error;
 use wordfreq::cli::Cli;
 use wordfreq::core::top_n_words;
+use wordfreq::parser;
 
+
+// fn main() -> anyhow::Result<()> {
 fn main() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
 
     // 2. Replace .expect() with the ? operator
     // If read_to_string fails, the ? operator will immediately return the error from main
-    let content = std::fs::read_to_string(&args.file)?;
+    // let content = std::fs::read_to_string(&args.file)?;
+    let content = parser::extract_text(&args.file)?;
+
 
     let top = args.top;
     let words = top_n_words(&content, top);

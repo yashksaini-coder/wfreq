@@ -24,3 +24,4 @@ pub fn top_n_words(content: &str, top: usize) -> Vec<(String, usize)> {
     sorted.truncate(top);
     sorted
 }
+
