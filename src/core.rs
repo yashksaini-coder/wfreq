@@ -1,13 +1,30 @@
+//! Word counting and statistics. Pure functions only, no file I/O.
+//!
+//! Flow: `count_words` reads the text once into a frequency map; every other
+//! function here borrows that map, so the text is never scanned twice.
+
 use std::collections::HashMap;
 
-// 1. Define the struct to hold the output
+/// Summary statistics computed from a word-frequency map.
 #[derive(Debug)]
 pub struct Stats {
+    /// Total number of words counted (every occurrence).
     pub total: usize,
+    /// Number of distinct words (vocabulary size).
     pub unique: usize,
+    /// Lexical diversity (type-token ratio): `unique / total`, in `0.0..=1.0`.
+    /// Closer to 1.0 means fewer repeated words. `0.0` for empty input.
     pub diversity: f64,
 }
 
+/// Counts how many times each word appears in `content`.
+///
+/// Words are split on whitespace, then normalized: everything except letters,
+/// digits, and apostrophes is removed, and the result is lowercased
+/// (`"Hello,"` → `"hello"`). Tokens that end up empty (e.g. `"--"`) are skipped.
+///
+/// Returns a map of `word → occurrence count`. The map has no ordering;
+/// use [`top_n`] for a ranked list.
 pub fn count_words(content: &str) -> HashMap<String, usize> {
     let mut map = HashMap::new();
     for word in content.split_whitespace() {
@@ -17,43 +34,52 @@ pub fn count_words(content: &str) -> HashMap<String, usize> {
             .collect::<String>()
             .to_lowercase();
 
-        if clean_word.is_empty(){
+        if clean_word.is_empty() {
             continue;
         }
-        *map.entry(clean_word).or_insert(0) +=1;
+        *map.entry(clean_word).or_insert(0) += 1;
     }
 
     map
 }
 
-
+/// Returns the `n` most frequent words, highest count first.
+///
+/// Ties are broken alphabetically so the output is the same on every run.
+/// If `n` exceeds the number of distinct words, all words are returned;
+/// `n == 0` returns an empty `Vec`.
+///
+/// Returns owned `(word, count)` pairs; only the `n` returned words are cloned.
 pub fn top_n(map: &HashMap<String, usize>, n: usize) -> Vec<(String, usize)> {
-    // 1. Collect references to the map's keys and values into a Vector
+    // Sort borrowed entries so nothing is cloned until we know what we keep
     let mut sorted: Vec<(&String, &usize)> = map.iter().collect();
-
-    // 2. Sort: Descending by count (b.1 vs a.1), then Ascending by word (a.0 vs b.0)
     sorted.sort_by(|a, b| b.1.cmp(a.1).then_with(|| a.0.cmp(b.0)));
 
-    // 3. Take the first 'n', and clone the borrowed data into owned types to return
     sorted
         .into_iter()
         .take(n)
         .map(|(word, count)| (word.clone(), *count))
         .collect()
-
 }
 
+/// Returns the words that occur exactly once (hapax legomena).
+///
+/// The returned `&str`s borrow from `map`, so `map` must outlive the result.
+/// Order is unspecified (it follows `HashMap` iteration); sort it before display.
 pub fn exactly_one(map: &HashMap<String, usize>) -> Vec<&str> {
-    map.iter().filter_map(|(word, count) | (*count ==1).then_some(word.as_str()))
-    .collect()
+    map.iter()
+        .filter_map(|(word, count)| (*count == 1).then_some(word.as_str()))
+        .collect()
 }
 
-pub fn stats(map: &HashMap<String, usize>) -> Stats{
+/// Computes total words, distinct words, and lexical diversity for `map`.
+///
+/// Returns a [`Stats`]. Safe on an empty map: diversity is `0.0` instead of
+/// dividing by zero.
+pub fn stats(map: &HashMap<String, usize>) -> Stats {
     let unique = map.len();
-
     let total: usize = map.values().sum();
 
-    // 3. Cast to f64 for floating-point division, handling the edge case of an empty file
     let diversity = if total > 0 {
         (unique as f64) / (total as f64)
     } else {
