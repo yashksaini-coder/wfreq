@@ -40,6 +40,7 @@ pub fn top_n(map: &HashMap<String, usize>, n: usize) -> Vec<(String, usize)> {
         .take(n)
         .map(|(word, count)| (word.clone(), *count))
         .collect()
+
 }
 
 pub fn exactly_one(map: &HashMap<String, usize>) -> Vec<&str> {
