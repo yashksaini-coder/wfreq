@@ -10,7 +10,7 @@ pub struct Cli {
     #[arg(required = true, num_args = 1)]
     pub file: std::path::PathBuf,
 
-    /// The files or directories to process (use '-' for stdin)
+    // The files or directories to process (use '-' for stdin)
     // #[arg(required = true, num_args = 1..)]
     // pub files: Vec<PathBuf>,
 
