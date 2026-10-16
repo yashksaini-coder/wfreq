@@ -1,9 +1,10 @@
-pub mod txt;
-pub mod pdf;
 pub mod docx;
+pub mod error;
+pub mod pdf;
+pub mod txt;
 
-use std::path::Path;
 use anyhow::{Result, bail};
+use std::path::Path;
 
 // 2. Create a unified public function for main.rs to call.
 // This hides the complexity of choosing the right parser from the rest of your app.
