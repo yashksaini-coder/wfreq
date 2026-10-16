@@ -1,5 +1,4 @@
 pub mod docx;
-pub mod error;
 pub mod pdf;
 pub mod txt;
 
