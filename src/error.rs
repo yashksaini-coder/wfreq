@@ -3,8 +3,12 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum CliError {
-    #[error("File not found or cannot read: {0}")]
-    FileReadError(PathBuf),
+    #[error("cannot read {}: {source}", .path.display())]
+    FileRead {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
 
     #[error("File can not be parsed: {0}")]
     ParseError(String),
@@ -12,6 +16,6 @@ pub enum CliError {
     #[error("File {0} is completely empty")]
     EmptyFile(PathBuf),
 
-    #[error("Unsupported file format : {0}. The supported formats are .txt, .md, .pdf, .docx")]
+    #[error("unsupported file format '.{0}' (supported: .txt, .md)")]
     UnsupportedFormat(String),
 }
