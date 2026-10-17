@@ -86,5 +86,9 @@ pub fn stats(map: &HashMap<String, usize>) -> Stats {
         0.0
     };
 
-    Stats { total, unique, diversity }
+    Stats {
+        total,
+        unique,
+        diversity,
+    }
 }
