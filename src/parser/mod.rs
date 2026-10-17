@@ -1,25 +1,18 @@
-pub mod docx;
-pub mod pdf;
 pub mod txt;
 
-use anyhow::{Result, bail};
+use crate::error::CliError;
 use std::path::Path;
 
-// 2. Create a unified public function for main.rs to call.
-// This hides the complexity of choosing the right parser from the rest of your app.
-pub fn extract_text(file_path: &Path) -> Result<String> {
-    // Safely extract the file extension
-    let extension = file_path
+/// Reads `file_path` and returns its text, choosing a parser by file extension.
+pub fn extract_text(file_path: &Path) -> Result<String, CliError> {
+    let ext = file_path
         .extension()
-        .and_then(|ext| ext.to_str())
+        .and_then(|e| e.to_str())
         .unwrap_or("")
         .to_lowercase();
 
-    // 3. Route the file to the correct specialized parser
-    match extension.as_str() {
+    match ext.as_str() {
         "txt" | "md" => txt::parse(file_path),
-        "pdf" => pdf::parse(file_path),
-        "docx" => docx::parse(file_path),
-        _ => bail!("Unsupported file extension: .{}", extension), // Returns an anyhow error
+        _ => Err(CliError::UnsupportedFormat(ext)),
     }
 }
