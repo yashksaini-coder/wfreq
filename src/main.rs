@@ -20,6 +20,10 @@ fn run() -> Result<(), Box<dyn Error>> {
     let counts = count_words(&content);
     let top = top_n(&counts, args.top);
 
+    if content.trim().is_empty() {
+        eprintln!("Error: The file is completely empty.");
+    }
+
     println!("Path: {}", args.file.display());
     for (i, (word, count)) in top.iter().enumerate() {
         println!("{:>2}. {:<15} {}", i + 1, word, count);
