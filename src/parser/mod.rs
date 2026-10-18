@@ -1,3 +1,6 @@
+// src/parsers/mod.rs
+pub mod docx;
+pub mod pdf;
 pub mod txt;
 
 use crate::error::CliError;
@@ -11,8 +14,11 @@ pub fn extract_text(file_path: &Path) -> Result<String, CliError> {
         .unwrap_or("")
         .to_lowercase();
 
+    // Group all valid extensions first, put the fallback `_` at the very end
     match ext.as_str() {
         "txt" | "md" => txt::parse(file_path),
+        "pdf" => pdf::parse(file_path),
+        "docx" => docx::parse(file_path),
         _ => Err(CliError::UnsupportedFormat(ext)),
     }
 }
