@@ -4,9 +4,6 @@
 //! function here borrows that map, so the text is never scanned twice.
 
 use std::collections::{HashMap, HashSet};
-
-use pdf_extract::Object::Name;
-
 /// Summary statistics computed from a word-frequency map.
 #[derive(Debug)]
 pub struct Stats {
