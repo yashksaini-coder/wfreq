@@ -3,7 +3,7 @@
 //! Flow: `count_words` reads the text once into a frequency map; every other
 //! function here borrows that map, so the text is never scanned twice.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// Summary statistics computed from a word-frequency map.
 #[derive(Debug)]
@@ -92,3 +92,14 @@ pub fn stats(map: &HashMap<String, usize>) -> Stats {
         diversity,
     }
 }
+
+/// The main fn to pass the ignore words as a Hash set in order to handle duplicate items
+/// Returns a &str borrow from the `map`, so the map value don't get used and resulting in a borrow
+/// checker error.
+pub fn ignore_words(map: HashMap<String, usize>, list: HashSet<&str>) -> HashMap<String, usize> {
+    map.into_iter()
+        .filter(|(word, _)| !list.contains(word.as_str()))
+        .collect()
+}
+
+pub const STOP_WORDS: &[&str] = &["the", "for", "on", "in", "and", "a", "is", "to"];
