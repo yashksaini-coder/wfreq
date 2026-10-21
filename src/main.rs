@@ -2,9 +2,8 @@ use clap::Parser;
 use std::collections::HashSet;
 use std::error::Error;
 use wordfreq::cli::Cli;
+use wordfreq::core::{STOP_WORDS, count_words, ignore_words, max_n_words, top_n};
 use wordfreq::parser;
-use wordfreq::core::{count_words, ignore_words, top_n, STOP_WORDS};
-
 
 fn main() {
     // Print errors with Display (our #[error] messages) instead of main's default Debug
@@ -22,9 +21,14 @@ fn run() -> Result<(), Box<dyn Error>> {
         eprintln!("Error: The file is completely empty.");
     }
 
-    let counts = count_words(&content);
+    let mut counts = count_words(&content);
+
+    if args.max_len > 0 {
+        counts = max_n_words(counts, args.max_len);
+    }
+
     let stop_words: HashSet<&str> = STOP_WORDS.iter().copied().collect();
-    
+
     let counts = if args.ignore_stop_words {
         ignore_words(counts, stop_words)
     } else {
