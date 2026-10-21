@@ -39,7 +39,7 @@ pub struct Cli {
 
     /// Maximum length of words to consider
     #[arg(long)]
-    pub max_len: usize,
+    pub max_len: Option<usize>,
 
     /// Show execution time and processing statistics
     #[arg(short, long, default_value_t = false)]

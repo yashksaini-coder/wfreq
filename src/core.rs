@@ -109,6 +109,13 @@ pub const STOP_WORDS: &[&str] = &["the", "for", "on", "in", "and", "a", "is", "t
 
 /// This fn will run a value comparison on the given hasmap of words with a n argument as input
 /// Returns a &str borrow from the `map`, again to avoid borrow checker error.
-pub fn max_n_words(map: HashMap<String, usize>, n: usize) -> HashMap<String, usize> {
-    map.into_iter().filter(|(word, _)| word.len() > n).collect()
+pub fn max_min_words(
+    map: HashMap<String, usize>,
+    max: usize,
+    min: usize,
+) -> HashMap<String, usize> {
+    map.into_iter()
+        .filter(|(word, _)| max > word.len() && word.len() > min)
+        .collect()
 }
+
