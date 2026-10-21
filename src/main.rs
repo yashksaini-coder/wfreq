@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use std::error::Error;
 use wordfreq::cli::Cli;
 use wordfreq::core::{STOP_WORDS, count_words, ignore_words, max_min_words, top_n};
+use wordfreq::error::CliError;
 use wordfreq::parser;
 
 fn main() {
@@ -17,8 +18,11 @@ fn run() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
     let content = parser::extract_text(&args.file)?;
 
+    // if content.trim().is_empty() {
+    //     eprintln!("Error: The file is completely empty.");
+    // }
     if content.trim().is_empty() {
-        eprintln!("Error: The file is completely empty.");
+        return Err(CliError::EmptyFile(args.file.clone()).into());
     }
 
     let mut counts = count_words(&content);
