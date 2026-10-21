@@ -26,6 +26,12 @@ fn run() -> Result<(), Box<dyn Error>> {
         return Err(CliError::EmptyFile(args.file.clone()).into());
     }
 
+    if let Some(max) = args.max_len
+        && args.min_len > max
+    {
+        return Err(CliError::InvalidRange { min: args.min_len, max }.into());
+    }
+
     let mut counts = count_words(&content);
 
     // // Only unwrap what actually needs unwrapping (args.max_len)

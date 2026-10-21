@@ -18,4 +18,7 @@ pub enum CliError {
 
     #[error("unsupported file format '.{0}' (supported: .txt, .md)")]
     UnsupportedFormat(String),
+
+    #[error("--min-len ({min}) is greater than --max-len ({max})")]
+    InvalidRange { min: usize, max: usize },
 }
