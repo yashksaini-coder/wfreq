@@ -13,7 +13,6 @@ pub struct Cli {
     // The files or directories to process (use '-' for stdin)
     // #[arg(required = true, num_args = 1..)]
     // pub files: Vec<PathBuf>,
-
     /// Recursively process directories
     #[arg(short, long, default_value_t = false)]
     pub recursive: bool,
@@ -40,7 +39,7 @@ pub struct Cli {
 
     /// Maximum length of words to consider
     #[arg(long)]
-    pub max_len: Option<usize>,
+    pub max_len: usize,
 
     /// Show execution time and processing statistics
     #[arg(short, long, default_value_t = false)]
