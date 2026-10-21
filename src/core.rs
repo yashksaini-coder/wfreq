@@ -5,6 +5,8 @@
 
 use std::collections::{HashMap, HashSet};
 
+use pdf_extract::Object::Name;
+
 /// Summary statistics computed from a word-frequency map.
 #[derive(Debug)]
 pub struct Stats {
@@ -94,7 +96,7 @@ pub fn stats(map: &HashMap<String, usize>) -> Stats {
 }
 
 /// The main fn to pass the ignore words as a Hash set in order to handle duplicate items
-/// Returns a &str borrow from the `map`, so the map value don't get used and resulting in a borrow
+/// Returns a &str borrow from the `map`, so the map value don't get used and result in a borrow
 /// checker error.
 pub fn ignore_words(map: HashMap<String, usize>, list: HashSet<&str>) -> HashMap<String, usize> {
     map.into_iter()
@@ -103,3 +105,13 @@ pub fn ignore_words(map: HashMap<String, usize>, list: HashSet<&str>) -> HashMap
 }
 
 pub const STOP_WORDS: &[&str] = &["the", "for", "on", "in", "and", "a", "is", "to"];
+
+// This is the idiomatic way of working the Min and Max len of words to return.
+// But a more better approach is to use the `retain` if we  want to avoid destroying the old HashMap and allocating memory for a completely new one
+// It filters the dictionary in-place.
+
+/// This fn will run a value comparison on the given hasmap of words with a n argument as input
+/// Returns a &str borrow from the `map`, again to avoid borrow checker error.
+pub fn max_n_words(map: HashMap<String, usize>, n: usize) -> HashMap<String, usize> {
+    map.into_iter().filter(|(word, _)| word.len() > n).collect()
+}
