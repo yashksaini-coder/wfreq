@@ -2,7 +2,8 @@ use clap::Parser;
 use std::collections::HashSet;
 use std::error::Error;
 use wordfreq::cli::Cli;
-use wordfreq::core::{STOP_WORDS, count_words, ignore_words, max_min_words, top_n};
+// use wordfreq::core::{STOP_WORDS, count_words, ignore_words, max_min_words, top_n};
+use wordfreq::core::{STOP_WORDS, count_words, filter_by_length, ignore_words, top_n};
 use wordfreq::error::CliError;
 use wordfreq::parser;
 
@@ -27,14 +28,15 @@ fn run() -> Result<(), Box<dyn Error>> {
 
     let mut counts = count_words(&content);
 
-    // Only unwrap what actually needs unwrapping (args.max_len)
-    if let Some(max) = args.max_len {
-        // Read args.min_len directly inside the closure
-        counts.retain(|word, _| word.len() > args.min_len && word.len() < max);
-    } else if args.min_len > 0 {
-        // If only min_len was provided
-        counts.retain(|word, _| word.len() > args.min_len);
-    }
+    // // Only unwrap what actually needs unwrapping (args.max_len)
+    // if let Some(max) = args.max_len {
+    //     // Read args.min_len directly inside the closure
+    //     counts.retain(|word, _| word.len() > args.min_len && word.len() < max);
+    // } else if args.min_len > 0 {
+    //     // If only min_len was provided
+    //     counts.retain(|word, _| word.len() > args.min_len);
+    // }
+    filter_by_length(&mut counts, args.min_len, args.max_len);
 
     // let stop_words: HashSet<&str> = STOP_WORDS.iter().copied().collect();
     //

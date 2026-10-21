@@ -112,15 +112,24 @@ pub const STOP_WORDS: &[&str] = &["the", "for", "on", "in", "and", "a", "is", "t
 // But a more better approach is to use the `retain` if we  want to avoid destroying the old HashMap and allocating memory for a completely new one
 // It filters the dictionary in-place.
 
-/// This fn will run a value comparison on the given hasmap of words with a n argument as input
-/// Returns a &str borrow from the `map`, again to avoid borrow checker error.
-pub fn max_min_words(
-    map: HashMap<String, usize>,
-    max: usize,
-    min: usize,
-) -> HashMap<String, usize> {
-    map.into_iter()
-        .filter(|(word, _)| max > word.len() && word.len() > min)
-        .collect()
+// /// This fn will run a value comparison on the given hasmap of words with a n argument as input
+// /// Returns a &str borrow from the `map`, again to avoid borrow checker error.
+// pub fn max_min_words(
+//     map: HashMap<String, usize>,
+//     max: usize,
+//     min: usize,
+// ) -> HashMap<String, usize> {
+//     map.into_iter()
+//         .filter(|(word, _)| max > word.len() && word.len() > min)
+//         .collect()
+// }
+
+/// Keeps only words whose length in characters is within `min..=max`, in place.
+/// `max = None` means no upper limit.
+pub fn filter_by_length(map: &mut HashMap<String, usize>, min: usize, max: Option<usize>) {
+    map.retain(|word, _| {
+        let len = word.chars().count();
+        len >= min && max.is_none_or(|m| len <= m)
+    });
 }
 
