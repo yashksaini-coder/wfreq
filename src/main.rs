@@ -36,13 +36,17 @@ fn run() -> Result<(), Box<dyn Error>> {
         counts.retain(|word, _| word.len() > args.min_len);
     }
 
-    let stop_words: HashSet<&str> = STOP_WORDS.iter().copied().collect();
-
-    let counts = if args.ignore_stop_words {
-        ignore_words(counts, stop_words)
-    } else {
-        counts
-    };
+    // let stop_words: HashSet<&str> = STOP_WORDS.iter().copied().collect();
+    //
+    // let counts = if args.ignore_stop_words {
+    //     ignore_words(counts, stop_words)
+    // } else {
+    //     counts
+    // };
+    if args.ignore_stop_words {
+        let stop_words: HashSet<&str> = STOP_WORDS.iter().copied().collect();
+        ignore_words(&mut counts, &stop_words);
+    }
 
     let top = top_n(&counts, args.top);
 

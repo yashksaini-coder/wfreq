@@ -92,13 +92,18 @@ pub fn stats(map: &HashMap<String, usize>) -> Stats {
     }
 }
 
-/// The main fn to pass the ignore words as a Hash set in order to handle duplicate items
-/// Returns a &str borrow from the `map`, so the map value don't get used and result in a borrow
-/// checker error.
-pub fn ignore_words(map: HashMap<String, usize>, list: HashSet<&str>) -> HashMap<String, usize> {
-    map.into_iter()
-        .filter(|(word, _)| !list.contains(word.as_str()))
-        .collect()
+// /// The main fn to pass the ignore words as a Hash set in order to handle duplicate items
+// /// Returns a &str borrow from the `map`, so the map value don't get used and result in a borrow
+// /// checker error.
+// pub fn ignore_words(map: HashMap<String, usize>, list: HashSet<&str>) -> HashMap<String, usize> {
+//     map.into_iter()
+//         .filter(|(word, _)| !list.contains(word.as_str()))
+//         .collect()
+// }
+
+/// Removes every word in `list` from `map`, in place.
+pub fn ignore_words(map: &mut HashMap<String, usize>, list: &HashSet<&str>) {
+    map.retain(|word, _| !list.contains(word.as_str()));
 }
 
 pub const STOP_WORDS: &[&str] = &["the", "for", "on", "in", "and", "a", "is", "to"];
