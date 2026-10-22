@@ -4,6 +4,8 @@
 //! function here borrows that map, so the text is never scanned twice.
 
 use std::collections::{HashMap, HashSet};
+use std::path::Path;
+use std::{fs, io};
 /// Summary statistics computed from a word-frequency map.
 #[derive(Debug)]
 pub struct Stats {
@@ -134,4 +136,39 @@ pub fn filter_by_length(map: &mut HashMap<String, usize>, min: usize, max: Optio
         let len = word.chars().count();
         len >= min && max.is_none_or(|m| len <= m)
     });
+}
+
+/// exclude fn that will read a file and then collect the words and put them in the STOP_WORDS
+/// borrowed string collection.
+/// Builds a fully owned HashSet of Strings. No lifetimes required!
+pub fn build_ignore_set(
+    exclude_file: Option<&Path>,
+    include_defaults: bool,
+) -> Result<HashSet<String>, io::Error> {
+    let mut ignore_set: HashSet<String> = HashSet::new();
+
+    // 1. Add the original built-in defaults flag of `include_stop_words`
+    if include_defaults {
+        for &word in STOP_WORDS {
+            // .to_string() allocates memory to convert the &str into an owned String
+            ignore_set.insert(word.to_string());
+        }
+    }
+
+    // 2. Reading words from the custom file if a path was provided
+    if let Some(path) = exclude_file {
+        // Read entire file into a String
+        let file_content = fs::read_to_string(path)?;
+
+        // .lines() can automatically splits the text by newlines (\n or \r\n)
+        for line in file_content.lines() {
+            let clean_word = line.trim().to_lowercase(); // Sanitize the input
+
+            if !clean_word.is_empty() {
+                ignore_set.insert(clean_word);
+            }
+        }
+    }
+
+    Ok(ignore_set)
 }
