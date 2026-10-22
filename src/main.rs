@@ -1,6 +1,9 @@
+use ::std::io;
 use clap::Parser;
 use std::collections::HashSet;
 use std::error::Error;
+use std::io::Write;
+use std::time::Instant;
 use wordfreq::cli::Cli;
 // use wordfreq::core::{STOP_WORDS, count_words, ignore_words, max_min_words, top_n};
 use wordfreq::core::{STOP_WORDS, count_words, filter_by_length, ignore_words, top_n};
@@ -16,7 +19,12 @@ fn main() {
 }
 
 fn run() -> Result<(), Box<dyn Error>> {
+    let cout = io::stdout();
+    let mut handle = io::BufWriter::new(cout);
     let args = Cli::parse();
+
+    // starting the clock
+    let start_time = Instant::now();
     let content = parser::extract_text(&args.file)?;
 
     // if content.trim().is_empty() {
@@ -29,7 +37,11 @@ fn run() -> Result<(), Box<dyn Error>> {
     if let Some(max) = args.max_len
         && args.min_len > max
     {
-        return Err(CliError::InvalidRange { min: args.min_len, max }.into());
+        return Err(CliError::InvalidRange {
+            min: args.min_len,
+            max,
+        }
+        .into());
     }
 
     let mut counts = count_words(&content);
@@ -58,9 +70,20 @@ fn run() -> Result<(), Box<dyn Error>> {
 
     let top = top_n(&counts, args.top);
 
-    println!("Path: {}", args.file.display());
+    // println!("Path: {}", args.file.display());
+    // Moving to writeln as it it 8x faster than println macro,
+    // and is best practice to use for everything related to output order ensuring sequential order.
+    writeln!(handle, "Path: {}", args.file.display())?;
+    handle.flush()?;
     for (i, (word, count)) in top.iter().enumerate() {
         println!("{:>2}. {:<15} {}", i + 1, word, count);
+    }
+
+    if args.verbose {
+        let duration = start_time.elapsed();
+        writeln!(handle, "\n--- Processing Statistics ---")?;
+        writeln!(handle, "Unique words tracked : {}", counts.len())?;
+        writeln!(handle, "Execution time       : {:?}", duration)?;
     }
 
     Ok(())
