@@ -44,7 +44,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         .into());
     }
 
-    let mut counts = count_words(&content);
+    let mut counts = count_words(&content, args.case_sensitive);
 
     // // Only unwrap what actually needs unwrapping (args.max_len)
     // if let Some(max) = args.max_len {
