@@ -24,17 +24,20 @@ pub struct Stats {
 ///
 /// Returns a map of `word → occurrence count`. The map has no ordering;
 /// use [`top_n`] for a ranked list.
-pub fn count_words(content: &str) -> HashMap<String, usize> {
+pub fn count_words(content: &str, case_sensitive: bool) -> HashMap<String, usize> {
     let mut map = HashMap::new();
     for word in content.split_whitespace() {
-        let clean_word: String = word
+        let mut clean_word: String = word
             .chars()
             .filter(|c| c.is_alphanumeric() || *c == '\'')
-            .collect::<String>()
-            .to_lowercase();
+            .collect::<String>();
 
         if clean_word.is_empty() {
             continue;
+        }
+
+        if !case_sensitive {
+            clean_word = clean_word.to_lowercase();
         }
         *map.entry(clean_word).or_insert(0) += 1;
     }
@@ -132,4 +135,3 @@ pub fn filter_by_length(map: &mut HashMap<String, usize>, min: usize, max: Optio
         len >= min && max.is_none_or(|m| len <= m)
     });
 }
-
