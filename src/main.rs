@@ -1,12 +1,10 @@
 use ::std::io;
 use clap::Parser;
-use std::collections::HashSet;
 use std::error::Error;
 use std::io::Write;
 use std::time::Instant;
 use wordfreq::cli::Cli;
-// use wordfreq::core::{STOP_WORDS, count_words, ignore_words, max_min_words, top_n};
-use wordfreq::core::{STOP_WORDS, count_words, filter_by_length, ignore_words, top_n};
+use wordfreq::core::{build_ignore_set, count_words, filter_by_length, top_n};
 use wordfreq::error::CliError;
 use wordfreq::parser;
 
@@ -56,18 +54,10 @@ fn run() -> Result<(), Box<dyn Error>> {
     // }
     filter_by_length(&mut counts, args.min_len, args.max_len);
 
-    // let stop_words: HashSet<&str> = STOP_WORDS.iter().copied().collect();
-    //
-    // let counts = if args.ignore_stop_words {
-    //     ignore_words(counts, stop_words)
-    // } else {
-    //     counts
-    // };
-    if args.ignore_stop_words {
-        let stop_words: HashSet<&str> = STOP_WORDS.iter().copied().collect();
-        ignore_words(&mut counts, &stop_words);
+    let ignore_set = build_ignore_set(args.exclude.as_deref(), args.ignore_stop_words)?;
+    if !ignore_set.is_empty() {
+        counts.retain(|word, _| !ignore_set.contains(word.as_str()));
     }
-
     let top = top_n(&counts, args.top);
 
     // println!("Path: {}", args.file.display());
