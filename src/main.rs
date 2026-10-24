@@ -4,7 +4,7 @@ use std::error::Error;
 use std::io::Write;
 use std::time::Instant;
 use wordfreq::cli::Cli;
-use wordfreq::core::{build_ignore_set, count_words, filter_by_length, top_n};
+use wordfreq::core::{build_ignore_set, count_words, filter_by_length, stats, top_n};
 use wordfreq::error::CliError;
 use wordfreq::parser;
 
@@ -74,6 +74,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         writeln!(handle, "\n--- Processing Statistics ---")?;
         writeln!(handle, "Unique words tracked : {}", counts.len())?;
         writeln!(handle, "Execution time       : {:?}", duration)?;
+        writeln!(handle, "Stats                : {:?}", stats(&counts))?;
     }
 
     Ok(())
