@@ -74,7 +74,9 @@ fn run() -> Result<(), Box<dyn Error>> {
         writeln!(handle, "\n--- Processing Statistics ---")?;
         writeln!(handle, "Unique words tracked : {}", counts.len())?;
         writeln!(handle, "Execution time       : {:?}", duration)?;
-        writeln!(handle, "Stats                : {:?}", stats(&counts))?;
+        writeln!(handle, "Total Words          : {:?}", stats(&counts).total)?;
+        writeln!(handle, "Unique Words         : {:?}", stats(&counts).unique)?;
+        writeln!(handle, "Diversity Ratio      : {:?}", stats(&counts).diversity)?;
     }
 
     Ok(())
