@@ -28,9 +28,10 @@ fn run() -> Result<(), Box<dyn Error>> {
     // if content.trim().is_empty() {
     //     eprintln!("Error: The file is completely empty.");
     // }
-    if content.trim().is_empty() {
-        return Err(CliError::EmptyFile(args.file.clone()).into());
-    }
+    // Moved into parser::extract_text
+    // if content.trim().is_empty() {
+    //     return Err(CliError::EmptyFile(args.file.clone()).into());
+    // }
 
     if let Some(max) = args.max_len
         && args.min_len > max
