@@ -2,12 +2,14 @@
 
 A simple CLI tool that shows the top N most frequent words in a file.
 
+![Using the wordfreq CLI](docs/images/cli-usage.svg)
+
 ## Supported files
 
 - .txt
 - .md
-- .pdf (planned)
-- .docx (planned)
+- .pdf
+- .docx
 
 File extensions are not case sensitive, so `NOTES.TXT` works too.
 
@@ -43,7 +45,7 @@ Path: files/cp.txt
 | `-x, --exclude <FILE>` | Skip the words listed in a file, one word per line.                            |
 | `--min-len <N>`        | Only count words with at least N letters. Default is 1.                        |
 | `--max-len <N>`        | Only count words with at most N letters.                                       |
-| `-v, --verbose`        | Also print the number of unique words and how long it took.                    |
+| `-v, --verbose`        | Also print total words, unique words, diversity ratio and how long it took.    |
 | `-h, --help`           | Show help.                                                                     |
 | `-V, --version`        | Show version.                                                                  |
 
@@ -72,6 +74,26 @@ The tool gives an error when:
 
 - the file does not exist or cannot be read (the reason is shown, for example "Permission denied")
 - the file is not valid UTF-8 text
-- the file is empty
+- a PDF or DOCX file is broken and cannot be parsed
+- the file is empty (0 bytes, or only spaces and new lines)
 - the file type is not supported
 - `--min-len` is bigger than `--max-len`
+
+## How it works
+
+Each module has one job. `main.rs` only connects them: it reads the options, asks the parser for the text, runs the counting and filters from `core.rs`, and prints the result.
+
+![wordfreq architecture](docs/images/architecture.svg)
+
+| File | Job |
+| --- | --- |
+| `src/main.rs` | Runs each step in order. Prints results to stdout and errors to stderr. |
+| `src/cli.rs` | The command line options (clap). |
+| `src/parser/mod.rs` | `extract_text`: checks the file and picks a parser by extension. |
+| `src/parser/txt.rs`, `pdf.rs`, `docx.rs` | Turn one file type into plain text. |
+| `src/core.rs` | Counting, filters, top N and stats. No file access. |
+| `src/error.rs` | The `CliError` type used for every error. |
+
+This is what happens on every run, and where each error comes from:
+
+![wordfreq control flow](docs/images/control-flow.svg)
