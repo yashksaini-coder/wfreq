@@ -4,8 +4,10 @@
 //! function here borrows that map, so the text is never scanned twice.
 
 use std::collections::{HashMap, HashSet};
+use crate::error::CliError;
+use std::fs;
 use std::path::Path;
-use std::{fs, io};
+// use std::{fs, io};
 /// Summary statistics computed from a word-frequency map.
 #[derive(Debug)]
 pub struct Stats {
@@ -144,7 +146,8 @@ pub fn filter_by_length(map: &mut HashMap<String, usize>, min: usize, max: Optio
 pub fn build_ignore_set(
     exclude_file: Option<&Path>,
     include_defaults: bool,
-) -> Result<HashSet<String>, io::Error> {
+// ) -> Result<HashSet<String>, io::Error> {
+) -> Result<HashSet<String>, CliError> {
     let mut ignore_set: HashSet<String> = HashSet::new();
 
     // 1. Add the original built-in defaults flag of `include_stop_words`
@@ -158,7 +161,11 @@ pub fn build_ignore_set(
     // 2. Reading words from the custom file if a path was provided
     if let Some(path) = exclude_file {
         // Read entire file into a String
-        let file_content = fs::read_to_string(path)?;
+        // let file_content = fs::read_to_string(path)?;
+        let file_content = fs::read_to_string(path).map_err(|source| CliError::FileRead {
+            path: path.to_path_buf(),
+            source,
+        })?;
 
         // .lines() can automatically splits the text by newlines (\n or \r\n)
         for line in file_content.lines() {
