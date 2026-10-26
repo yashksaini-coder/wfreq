@@ -16,7 +16,8 @@ pub enum CliError {
     #[error("File {0} is completely empty")]
     EmptyFile(PathBuf),
 
-    #[error("unsupported file format '.{0}' (supported: .txt, .md)")]
+    // Updated to include .pdf and .docx
+    #[error("unsupported file format '.{0}' (supported: .txt, .md, .pdf, .docx)")]
     UnsupportedFormat(String),
 
     #[error("--min-len ({min}) is greater than --max-len ({max})")]
