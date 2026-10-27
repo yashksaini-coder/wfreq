@@ -1,10 +1,33 @@
 [package]
-name = "wordfreq"
+name = "wfreq"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.88"
+description = "Show the top N most frequent words in .txt, .md, .pdf and .docx files, folders or stdin"
+license = "MIT"
+repository = "https://github.com/yashksaini-coder/wordfreq"
+readme = "README.md"
+keywords = ["word-frequency", "cli", "text", "pdf", "docx"]
+categories = ["command-line-utilities", "text-processing"]
+exclude = ["files/", "docs/", ".github/", ".remember/"]
+
+[lib]
+name = "wordfreq"
+
+[[bin]]
+name = "wordfreq"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.6.7", features = ["derive"] }
 docx-lite = "0.2.0"
 pdf-extract = "0.12.1"
 thiserror = "2.0.21"
+
+[dev-dependencies]
+criterion = "0.8.2"
+proptest = "1.12.0"
+
+[[bench]]
+name = "count"
+harness = false
