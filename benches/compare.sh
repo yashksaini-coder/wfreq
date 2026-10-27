@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Compare wordfreq against the classic Unix word-count pipeline with hyperfine.
+# Compare wfreq against the classic Unix word-count pipeline with hyperfine.
 #
 # Needs: pdftotext (poppler-utils) and hyperfine.
 # Run from the repo root: ./benches/compare.sh
@@ -21,7 +21,7 @@ cargo build --release --quiet
 # Same job in both: lowercase, split on anything that is not a letter, digit or
 # apostrophe, count, print the top 10.
 hyperfine --shell=bash --warmup 2 --runs 10 \
-    --command-name "wordfreq" \
-    "./target/release/wordfreq $corpus -n 10" \
+    --command-name "wfreq" \
+    "./target/release/wfreq $corpus -n 10" \
     --command-name "tr | sort | uniq -c | sort -rn" \
     "tr -cs \"[:alnum:]'\" '\n' < $corpus | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -rn | head -10"
