@@ -1,4 +1,4 @@
-//! Use wordfreq as a library: read one file, drop stop words, print the top 5.
+//! Use wfreq as a library: read one file, drop stop words, print the top 5.
 //!
 //! Run it with:
 //!
@@ -7,9 +7,9 @@
 //! ```
 
 use std::path::PathBuf;
-use wordfreq::core::{build_ignore_set, count_words, top_n};
-use wordfreq::output::{Format, write_top};
-use wordfreq::parser::extract_text;
+use wfreq::core::{build_ignore_set, count_words, top_n};
+use wfreq::output::{Format, write_top};
+use wfreq::parser::extract_text;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let path = std::env::args()
