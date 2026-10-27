@@ -3,7 +3,7 @@
 
 use proptest::prelude::*;
 use std::collections::HashMap;
-use wordfreq::core::{count_words, filter_by_length, merge_counts, stats, top_n};
+use wfreq::core::{count_words, filter_by_length, merge_counts, stats, top_n};
 
 /// Text made of short words from a small alphabet, mixed with punctuation,
 /// capitals and some non-ASCII letters, so words repeat often.
