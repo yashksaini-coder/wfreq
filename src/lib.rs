@@ -1,6 +1,6 @@
 //! Count the most frequent words in text, files and folders.
 //!
-//! This crate powers the `wordfreq` command line tool, and its modules can
+//! This crate powers the `wfreq` command line tool, and its modules can
 //! also be used as a library. The usual flow is:
 //!
 //! 1. [`input::collect_files`] turns paths into a list of files.
@@ -12,8 +12,8 @@
 //! # Example
 //!
 //! ```
-//! use wordfreq::core::{count_words, top_n};
-//! use wordfreq::output::{write_top, Format};
+//! use wfreq::core::{count_words, top_n};
+//! use wfreq::output::{write_top, Format};
 //!
 //! let counts = count_words("the cat saw the dog", false);
 //! let top = top_n(&counts, 2);
