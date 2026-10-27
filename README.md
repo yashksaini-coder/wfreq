@@ -5,19 +5,8 @@
 
 A simple CLI tool that shows the top N most frequent words in one or more files.
 
-![wfreq running in a terminal: a table of the top words in a .docx file with stats, then CSV output for a whole folder](docs/images/terminal.png)
-
-## Demo
-
 ![wfreq demo: plain, table and CSV output, stdin, a whole folder, -v stats and an error](docs/images/demo.gif)
 
-The demo runs the real binary on the sample files in [`files/`](files). To record it again:
-
-```
-./scripts/record-demo.sh
-```
-
-It needs [asciinema](https://asciinema.org) and [agg](https://github.com/asciinema/agg) (`cargo install --locked asciinema agg`).
 
 ## Supported files
 
