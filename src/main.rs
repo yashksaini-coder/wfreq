@@ -7,6 +7,7 @@ use wordfreq::cli::Cli;
 use wordfreq::core::{build_ignore_set, count_words, filter_by_length, merge_counts, stats, top_n};
 use wordfreq::error::CliError;
 use wordfreq::input::collect_files;
+use wordfreq::output::{Format, write_top};
 use wordfreq::parser;
 
 fn main() {
@@ -62,14 +63,15 @@ fn run() -> Result<(), Box<dyn Error>> {
     let top = top_n(&counts, args.top);
 
     let mut out = io::BufWriter::new(io::stdout().lock());
-    if files.len() == 1 {
-        writeln!(out, "Path: {}", files[0].display())?;
-    } else {
-        writeln!(out, "Files: {files_read}")?;
+    // CSV output must contain only data rows, so it gets no header line
+    if args.format != Format::Csv {
+        if files.len() == 1 {
+            writeln!(out, "Path: {}", files[0].display())?;
+        } else {
+            writeln!(out, "Files: {files_read}")?;
+        }
     }
-    for (i, (word, count)) in top.iter().enumerate() {
-        writeln!(out, "{:>2}. {:<15} {}", i + 1, word, count)?;
-    }
+    write_top(&mut out, &top, args.format)?;
 
     if args.verbose {
         let s = stats(&counts);
