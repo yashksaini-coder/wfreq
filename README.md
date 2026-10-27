@@ -1,11 +1,11 @@
-# Wordfreq
+# wfreq
 
 [![CI](https://github.com/yashksaini-coder/wordfreq/actions/workflows/ci.yml/badge.svg)](https://github.com/yashksaini-coder/wordfreq/actions/workflows/ci.yml)
 [![crates.io](https://img.shields.io/crates/v/wfreq.svg)](https://crates.io/crates/wfreq)
 
 A simple CLI tool that shows the top N most frequent words in one or more files.
 
-![wordfreq running in a terminal: a table of the top words in a .docx file with stats, then CSV output for a whole folder](docs/images/terminal.png)
+![wfreq running in a terminal: a table of the top words in a .docx file with stats, then CSV output for a whole folder](docs/images/terminal.png)
 
 ## Supported files
 
@@ -19,7 +19,7 @@ File extensions are not case sensitive, so `NOTES.TXT` works too.
 
 ## Install
 
-From crates.io (the package is called `wfreq`, the command is `wordfreq`):
+From crates.io:
 
 ```
 cargo install wfreq
@@ -33,7 +33,7 @@ Or build from source:
 ```
 git clone https://github.com/yashksaini-coder/wordfreq
 cd wordfreq
-cargo build --release   # binary at target/release/wordfreq
+cargo build --release   # binary at target/release/wfreq
 ```
 
 Needs Rust 1.88 or newer.
@@ -41,17 +41,17 @@ Needs Rust 1.88 or newer.
 ## Usage
 
 ```
-wordfreq [OPTIONS] <FILES>...
+wfreq [OPTIONS] <FILES>...
 ```
 
 `<FILES>` can be any mix of files, folders and `-` for stdin. All of them are counted together.
 
-![Using the wordfreq CLI](docs/images/cli-usage.svg)
+![Using the wfreq CLI](docs/images/cli-usage.svg)
 
 One file:
 
 ```
-$ wordfreq files/cp.txt -n 3
+$ wfreq files/cp.txt -n 3
 Path: files/cp.txt
  1. n               8
  2. a               7
@@ -61,7 +61,7 @@ Path: files/cp.txt
 A folder, shown as a table:
 
 ```
-$ wordfreq files -n 3 -f table
+$ wfreq files -n 3 -f table
 warning: File files/empty_file.txt is completely empty (skipped)
 warning: File files/empty_pdf.pdf is completely empty (skipped)
 Files: 5
@@ -77,7 +77,7 @@ Files: 5
 Two files as CSV:
 
 ```
-$ wordfreq files/cp.txt files/dsa_patterns.docx -n 3 -f csv
+$ wfreq files/cp.txt files/dsa_patterns.docx -n 3 -f csv
 rank,word,count
 1,the,63
 2,a,56
@@ -87,7 +87,7 @@ rank,word,count
 From stdin:
 
 ```
-$ echo "to be or not to be" | wordfreq - -n 2
+$ echo "to be or not to be" | wfreq - -n 2
 Path: -
  1. be              2
  2. to              2
@@ -133,7 +133,7 @@ Path: -
 Only the results go to stdout. Warnings, errors and the `-v` stats go to stderr. So you can pipe or save the results without anything else mixed in:
 
 ```
-wordfreq docs/ -r -f csv > top.csv 2> errors.log
+wfreq docs/ -r -f csv > top.csv 2> errors.log
 ```
 
 With `-f csv` there is no `Path:` or `Files:` line, only the CSV rows.
@@ -165,7 +165,7 @@ cargo run --example top_words -- files/cp.txt
 ```
 
 ```rust
-use wordfreq::core::{count_words, top_n};
+use wfreq::core::{count_words, top_n};
 
 let counts = count_words("the cat saw the dog", false);
 let top = top_n(&counts, 2);
@@ -211,10 +211,10 @@ The classic way to do this in a shell is `tr | sort | uniq -c | sort -rn`. [benc
 
 | Command | Mean time | Peak memory |
 | --- | --- | --- |
-| `wordfreq corpus.txt -n 10` | **186.8 ms** ± 1.5 | **21 MiB** |
+| `wfreq corpus.txt -n 10` | **186.8 ms** ± 1.5 | **21 MiB** |
 | `tr -cs "[:alnum:]'" '\n' \| tr A-Z a-z \| sort \| uniq -c \| sort -rn \| head` | 258.2 ms ± 8.2 | 412 MiB |
 
-wordfreq is about **1.4x faster** and uses about **20x less memory**, because it counts with a hash map instead of sorting every word. The pipeline uses `LC_ALL=C`, its fastest setting. Both find the same top words; counts differ slightly because the pipeline splits words at symbols like `-`, while wordfreq removes the symbol and keeps one word.
+wfreq is about **1.4x faster** and uses about **20x less memory**, because it counts with a hash map instead of sorting every word. The pipeline uses `LC_ALL=C`, its fastest setting. Both find the same top words; counts differ slightly because the pipeline splits words at symbols like `-`, while wfreq removes the symbol and keeps one word.
 
 **Hardware and software:** Intel Core i7-13620H (10 cores, 16 threads), 23 GiB RAM, Linux 7.2.8, rustc 1.98.1, release build, hyperfine 2.0.0, GNU coreutils 9.12. Numbers will differ on other machines.
 
@@ -222,7 +222,7 @@ wordfreq is about **1.4x faster** and uses about **20x less memory**, because it
 
 Each module has one job. `main.rs` only connects them: it reads the options, collects the files, asks the parser for each file's text, runs the counting and filters from `core.rs`, and prints the result through `output.rs`.
 
-![wordfreq architecture](docs/images/architecture.svg)
+![wfreq architecture](docs/images/architecture.svg)
 
 | File | Job |
 | --- | --- |
@@ -237,7 +237,7 @@ Each module has one job. `main.rs` only connects them: it reads the options, col
 
 This is what happens on every run, and where each error comes from:
 
-![wordfreq control flow](docs/images/control-flow.svg)
+![wfreq control flow](docs/images/control-flow.svg)
 
 ## Changelog
 
