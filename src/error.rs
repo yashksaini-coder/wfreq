@@ -10,9 +10,6 @@ pub enum CliError {
         source: std::io::Error,
     },
 
-    #[error("File can not be parsed: {0}")]
-    ParseError(String),
-
     #[error("cannot parse {}: {reason}", .path.display())]
     Parse { path: PathBuf, reason: String },
 
