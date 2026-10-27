@@ -31,7 +31,7 @@ pub struct Stats {
 /// (e.g. `"--"`) are skipped.
 ///
 /// ```
-/// let counts = wordfreq::core::count_words("Hello, hello world!", false);
+/// let counts = wfreq::core::count_words("Hello, hello world!", false);
 /// assert_eq!(counts["hello"], 2);
 /// assert_eq!(counts["world"], 1);
 /// ```
