@@ -1,3 +1,4 @@
+use crate::output::Format;
 use clap::Parser;
 use std::path::PathBuf;
 
@@ -13,6 +14,10 @@ pub struct Cli {
     /// Also read files in subdirectories when a directory is given
     #[arg(short, long)]
     pub recursive: bool,
+
+    /// Output format for the results
+    #[arg(short, long, value_enum, default_value_t = Format::Plain)]
+    pub format: Format,
 
     /// Number of top frequent words to display
     #[arg(short = 'n', long, default_value_t = 10)]
