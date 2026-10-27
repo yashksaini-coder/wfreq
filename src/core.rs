@@ -3,8 +3,8 @@
 //! Flow: `count_words` reads the text once into a frequency map; every other
 //! function here borrows that map, so the text is never scanned twice.
 
-use std::collections::{HashMap, HashSet};
 use crate::error::CliError;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::Path;
 // use std::{fs, io};
@@ -146,7 +146,7 @@ pub fn filter_by_length(map: &mut HashMap<String, usize>, min: usize, max: Optio
 pub fn build_ignore_set(
     exclude_file: Option<&Path>,
     include_defaults: bool,
-// ) -> Result<HashSet<String>, io::Error> {
+    // ) -> Result<HashSet<String>, io::Error> {
 ) -> Result<HashSet<String>, CliError> {
     let mut ignore_set: HashSet<String> = HashSet::new();
 
@@ -178,4 +178,11 @@ pub fn build_ignore_set(
     }
 
     Ok(ignore_set)
+}
+
+/// Adds the counts in `from` into `into`, so several files can be counted together.
+pub fn merge_counts(into: &mut HashMap<String, usize>, from: HashMap<String, usize>) {
+    for (word, count) in from {
+        *into.entry(word).or_insert(0) += count;
+    }
 }
