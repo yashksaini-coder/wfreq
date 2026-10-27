@@ -44,7 +44,7 @@ jobs:
           toolchain: stable
       - uses: taiki-e/upload-rust-binary-action@f0d45ae91ee7b8ee928de7a9d04d893a08bcbec6 # v1.30.2
         with:
-          bin: wordfreq
+          bin: wfreq
           target: ${{ matrix.target }}
-          archive: wordfreq-$tag-$target
+          archive: wfreq-$tag-$target
           token: ${{ secrets.GITHUB_TOKEN }}
