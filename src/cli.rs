@@ -6,15 +6,12 @@ use std::path::PathBuf;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
-    // A single filepath passed as input to CLI
-    #[arg(required = true, num_args = 1)]
-    pub file: std::path::PathBuf,
+    /// Files or directories to read. Use - to read text from stdin
+    #[arg(required = true)]
+    pub files: Vec<PathBuf>,
 
-    // The files or directories to process (use '-' for stdin)
-    // #[arg(required = true, num_args = 1..)]
-    // pub files: Vec<PathBuf>,
-    /// Recursively process directories
-    #[arg(short, long, default_value_t = false)]
+    /// Also read files in subdirectories when a directory is given
+    #[arg(short, long)]
     pub recursive: bool,
 
     /// Number of top frequent words to display
