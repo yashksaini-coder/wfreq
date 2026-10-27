@@ -1,4 +1,4 @@
-//! End-to-end tests: run the real `wordfreq` binary and check stdout, stderr
+//! End-to-end tests: run the real `wfreq` binary and check stdout, stderr
 //! and the exit code.
 
 use std::fs;
@@ -6,7 +6,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output, Stdio};
 
-const BIN: &str = env!("CARGO_BIN_EXE_wordfreq");
+const BIN: &str = env!("CARGO_BIN_EXE_wfreq");
 
 /// A fresh, empty folder for one test, inside Cargo's target directory.
 fn workdir(name: &str) -> PathBuf {
