@@ -1,0 +1,11 @@
+# Keeps the SHA-pinned GitHub Actions and the Cargo dependencies up to date
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
