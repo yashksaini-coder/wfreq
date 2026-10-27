@@ -5,7 +5,7 @@
 
 use criterion::{BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
 use std::hint::black_box;
-use wordfreq::core::{count_words, filter_by_length, top_n};
+use wfreq::core::{count_words, filter_by_length, top_n};
 
 /// Builds `words` words of text from a 5,000-word vocabulary.
 ///
