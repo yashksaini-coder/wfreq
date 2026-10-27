@@ -8,7 +8,7 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [0.1.0] - 2026-10-27
 
-First release. Published on crates.io as `wfreq`; the command is `wordfreq`.
+First release, published on crates.io as `wfreq`.
 
 ### Added
 
@@ -18,7 +18,7 @@ First release. Published on crates.io as `wfreq`; the command is `wordfreq`.
 - Filters: `--ignore-stop-words`, `-x/--exclude <FILE>`, `--min-len`, `--max-len`, `-i/--case-sensitive`.
 - `-v/--verbose` stats on stderr: files read, total words, unique words, diversity ratio, time.
 - Clear errors with the file path and the reason. With several files, a bad file is a warning and is skipped.
-- Library API (`wordfreq::core`, `parser`, `input`, `output`) with rustdoc on every public item.
+- Library API (`wfreq::core`, `parser`, `input`, `output`) with rustdoc on every public item.
 - Unit, integration, property (proptest) and doc tests; criterion benchmarks.
 - CI: fmt, clippy with warnings denied, tests, rustdoc and minimum Rust version 1.88.
 
