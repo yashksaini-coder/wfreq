@@ -53,8 +53,18 @@ fn csv_field(s: &str) -> String {
 fn write_table(out: &mut impl Write, top: &[(String, usize)]) -> io::Result<()> {
     // Column widths in characters (not bytes), so words like "café" line up
     let rank_w = top.len().to_string().len();
-    let word_w = top.iter().map(|(w, _)| w.chars().count()).max().unwrap_or(0).max(4);
-    let count_w = top.iter().map(|(_, c)| c.to_string().len()).max().unwrap_or(0).max(5);
+    let word_w = top
+        .iter()
+        .map(|(w, _)| w.chars().count())
+        .max()
+        .unwrap_or(0)
+        .max(4);
+    let count_w = top
+        .iter()
+        .map(|(_, c)| c.to_string().len())
+        .max()
+        .unwrap_or(0)
+        .max(5);
     // top is sorted, so the first count is the largest; max(1) avoids dividing by zero
     let max_count = top.first().map_or(1, |(_, c)| *c).max(1);
 
