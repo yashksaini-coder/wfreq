@@ -1,3 +1,5 @@
+//! Reads supported files (and stdin) as plain text.
+
 mod docx;
 mod pdf;
 mod txt;
