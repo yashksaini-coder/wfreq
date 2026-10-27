@@ -1,9 +1,10 @@
+//! Command line options, parsed with clap.
+
 use crate::output::Format;
 use clap::Parser;
 use std::path::PathBuf;
 
 /// A fast CLI tool to count the top N most frequent words in supported files.
-
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
