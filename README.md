@@ -5,7 +5,7 @@
 
 A simple CLI tool that shows the top N most frequent words in one or more files.
 
-![Using the wordfreq CLI](docs/images/cli-usage.svg)
+![wordfreq running in a terminal: a table of the top words in a .docx file with stats, then CSV output for a whole folder](docs/images/terminal.png)
 
 ## Supported files
 
@@ -45,6 +45,8 @@ wordfreq [OPTIONS] <FILES>...
 ```
 
 `<FILES>` can be any mix of files, folders and `-` for stdin. All of them are counted together.
+
+![Using the wordfreq CLI](docs/images/cli-usage.svg)
 
 One file:
 
