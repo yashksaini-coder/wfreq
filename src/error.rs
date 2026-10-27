@@ -22,4 +22,7 @@ pub enum CliError {
 
     #[error("--min-len ({min}) is greater than --max-len ({max})")]
     InvalidRange { min: usize, max: usize },
+
+    #[error("none of the given files could be read")]
+    NoInput,
 }
