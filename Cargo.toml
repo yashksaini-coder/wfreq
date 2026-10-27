@@ -1,6 +1,6 @@
 [package]
 name = "wfreq"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.88"
 description = "Show the top N most frequent words in .txt, .md, .pdf and .docx files, folders or stdin"
