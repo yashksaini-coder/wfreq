@@ -3,12 +3,12 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::io::{self, Write};
 use std::time::Instant;
-use wordfreq::cli::Cli;
-use wordfreq::core::{build_ignore_set, count_words, filter_by_length, merge_counts, stats, top_n};
-use wordfreq::error::CliError;
-use wordfreq::input::collect_files;
-use wordfreq::output::{Format, write_top};
-use wordfreq::parser;
+use wfreq::cli::Cli;
+use wfreq::core::{build_ignore_set, count_words, filter_by_length, merge_counts, stats, top_n};
+use wfreq::error::CliError;
+use wfreq::input::collect_files;
+use wfreq::output::{Format, write_top};
+use wfreq::parser;
 
 fn main() {
     // Print errors with Display (our #[error] messages) instead of main's default Debug
