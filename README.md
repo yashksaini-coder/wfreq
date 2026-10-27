@@ -1,5 +1,8 @@
 # Wordfreq
 
+[![CI](https://github.com/yashksaini-coder/wordfreq/actions/workflows/ci.yml/badge.svg)](https://github.com/yashksaini-coder/wordfreq/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/wfreq.svg)](https://crates.io/crates/wfreq)
+
 A simple CLI tool that shows the top N most frequent words in one or more files.
 
 ![Using the wordfreq CLI](docs/images/cli-usage.svg)
@@ -14,11 +17,26 @@ A simple CLI tool that shows the top N most frequent words in one or more files.
 
 File extensions are not case sensitive, so `NOTES.TXT` works too.
 
-## Build
+## Install
+
+From crates.io (the package is called `wfreq`, the command is `wordfreq`):
 
 ```
-cargo build --release
+cargo install wfreq
 ```
+
+Or download a ready-made binary for Linux, macOS or Windows from the
+[releases page](https://github.com/yashksaini-coder/wordfreq/releases).
+
+Or build from source:
+
+```
+git clone https://github.com/yashksaini-coder/wordfreq
+cd wordfreq
+cargo build --release   # binary at target/release/wordfreq
+```
+
+Needs Rust 1.88 or newer.
 
 ## Usage
 
@@ -135,6 +153,69 @@ When you give one file, any problem with it is an error. When you give several f
 
 A wrong flag is reported by clap with exit code 2.
 
+## Use it as a library
+
+The counting code is a normal Rust library. A full runnable example is in
+[examples/top_words.rs](examples/top_words.rs):
+
+```
+cargo run --example top_words -- files/cp.txt
+```
+
+```rust
+use wordfreq::core::{count_words, top_n};
+
+let counts = count_words("the cat saw the dog", false);
+let top = top_n(&counts, 2);
+assert_eq!(top, vec![("the".to_string(), 2), ("cat".to_string(), 1)]);
+```
+
+API docs: `cargo doc --open`.
+
+## Tests
+
+```
+cargo test
+```
+
+- **Unit tests** next to the code in `src/core.rs`, `src/output.rs` and `src/input.rs`.
+- **Integration tests** in `tests/integration.rs` run the real binary and check stdout, stderr and the exit code.
+- **Property tests** in `tests/properties.rs` use [proptest](https://crates.io/crates/proptest) to check rules for random input, for example "top_n is always sorted" and "the length filter keeps exactly the words in range".
+- **Doc tests** run the examples in the API docs.
+
+CI runs `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, the tests, `cargo doc` with warnings denied, and a build on Rust 1.88. The crate has no `unsafe` code and `#![forbid(unsafe_code)]` keeps it that way, so there is nothing for Miri to check.
+
+## Benchmarks
+
+### Counting core (criterion)
+
+```
+cargo bench
+```
+
+| Benchmark | Time | Throughput |
+| --- | --- | --- |
+| `count_words`, 10k words | 672 µs | 114 MiB/s |
+| `count_words`, 100k words | 5.82 ms | 132 MiB/s |
+| `count_words`, 1M words | 52.2 ms | 148 MiB/s |
+| `top_n` 10 of 1M words | 193 µs | |
+| `filter_by_length` 3..=8 of 1M words | 89 µs | |
+
+The input is generated text with a fixed seed (see `benches/count.rs`), so every run measures the same thing.
+
+### Compared with the Unix pipeline
+
+The classic way to do this in a shell is `tr | sort | uniq -c | sort -rn`. [benches/compare.sh](benches/compare.sh) runs both on the same 17 MB of English text (the Competitive Programmer's Handbook, 3.5 million words) with [hyperfine](https://github.com/sharkdp/hyperfine):
+
+| Command | Mean time | Peak memory |
+| --- | --- | --- |
+| `wordfreq corpus.txt -n 10` | **186.8 ms** ± 1.5 | **21 MiB** |
+| `tr -cs "[:alnum:]'" '\n' \| tr A-Z a-z \| sort \| uniq -c \| sort -rn \| head` | 258.2 ms ± 8.2 | 412 MiB |
+
+wordfreq is about **1.4x faster** and uses about **20x less memory**, because it counts with a hash map instead of sorting every word. The pipeline uses `LC_ALL=C`, its fastest setting. Both find the same top words; counts differ slightly because the pipeline splits words at symbols like `-`, while wordfreq removes the symbol and keeps one word.
+
+**Hardware and software:** Intel Core i7-13620H (10 cores, 16 threads), 23 GiB RAM, Linux 7.2.8, rustc 1.98.1, release build, hyperfine 2.0.0, GNU coreutils 9.12. Numbers will differ on other machines.
+
 ## How it works
 
 Each module has one job. `main.rs` only connects them: it reads the options, collects the files, asks the parser for each file's text, runs the counting and filters from `core.rs`, and prints the result through `output.rs`.
@@ -155,3 +236,11 @@ Each module has one job. `main.rs` only connects them: it reads the options, col
 This is what happens on every run, and where each error comes from:
 
 ![wordfreq control flow](docs/images/control-flow.svg)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+MIT, see [LICENSE](LICENSE).
