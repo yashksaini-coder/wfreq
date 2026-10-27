@@ -13,6 +13,9 @@ pub enum CliError {
     #[error("File can not be parsed: {0}")]
     ParseError(String),
 
+    #[error("cannot parse {}: {reason}", .path.display())]
+    Parse { path: PathBuf, reason: String },
+
     #[error("File {0} is completely empty")]
     EmptyFile(PathBuf),
 
