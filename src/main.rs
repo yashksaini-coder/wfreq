@@ -72,15 +72,18 @@ fn run() -> Result<(), Box<dyn Error>> {
         }
     }
     write_top(&mut out, &top, args.format)?;
+    out.flush()?;
 
+    // Stats go to stderr so they never mix into piped or CSV output
     if args.verbose {
         let s = stats(&counts);
-        writeln!(out, "\n--- Processing Statistics ---")?;
-        writeln!(out, "Files read           : {files_read}")?;
-        writeln!(out, "Execution time       : {:?}", start_time.elapsed())?;
-        writeln!(out, "Total Words          : {}", s.total)?;
-        writeln!(out, "Unique Words         : {}", s.unique)?;
-        writeln!(out, "Diversity Ratio      : {}", s.diversity)?;
+        eprintln!();
+        eprintln!("--- Processing Statistics ---");
+        eprintln!("Files read      : {files_read}");
+        eprintln!("Total words     : {}", s.total);
+        eprintln!("Unique words    : {}", s.unique);
+        eprintln!("Diversity ratio : {:.3}", s.diversity);
+        eprintln!("Execution time  : {:?}", start_time.elapsed());
     }
 
     Ok(())
