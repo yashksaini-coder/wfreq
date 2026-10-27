@@ -1,3 +1,5 @@
+//! Turns the paths given on the command line into a list of files to read.
+
 use crate::error::CliError;
 use crate::parser;
 use std::path::{Path, PathBuf};
@@ -46,4 +48,55 @@ fn walk_dir(dir: &Path, recursive: bool, files: &mut Vec<PathBuf>) -> Result<(),
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Creates a fresh folder tree for one test:
+    /// root/a.txt, root/b.md, root/skip.csv, root/sub/c.txt
+    fn tree(name: &str) -> PathBuf {
+        let root = std::env::temp_dir().join(format!("wfreq-input-{name}-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(root.join("sub")).unwrap();
+        for f in ["a.txt", "b.md", "skip.csv", "sub/c.txt"] {
+            fs::write(root.join(f), "word").unwrap();
+        }
+        root
+    }
+
+    fn names(files: &[PathBuf], root: &Path) -> Vec<String> {
+        files
+            .iter()
+            .map(|f| {
+                f.strip_prefix(root)
+                    .unwrap()
+                    .to_string_lossy()
+                    .replace('\\', "/")
+            })
+            .collect()
+    }
+
+    #[test]
+    fn folder_without_recursive_reads_top_level_only() {
+        let root = tree("flat");
+        let files = collect_files(std::slice::from_ref(&root), false).unwrap();
+        assert_eq!(names(&files, &root), ["a.txt", "b.md"]);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn folder_with_recursive_reads_subfolders() {
+        let root = tree("deep");
+        let files = collect_files(std::slice::from_ref(&root), true).unwrap();
+        assert_eq!(names(&files, &root), ["a.txt", "b.md", "sub/c.txt"]);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn plain_paths_and_stdin_are_kept_as_given() {
+        let paths = [PathBuf::from("missing.pdf"), PathBuf::from("-")];
+        assert_eq!(collect_files(&paths, false).unwrap(), paths);
+    }
 }
