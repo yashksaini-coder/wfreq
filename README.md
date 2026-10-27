@@ -1,7 +1,7 @@
 # wfreq
 
 [![CI](https://github.com/yashksaini-coder/wordfreq/actions/workflows/ci.yml/badge.svg)](https://github.com/yashksaini-coder/wordfreq/actions/workflows/ci.yml)
-[![crates.io](https://img.shields.io/crates/v/wfreq.svg)](https://crates.io/crates/wfreq)
+[![crates.io](https://img.shields.io/crates/v/wfreq?logo=rust&cacheSeconds=3600)](https://crates.io/crates/wfreq)
 
 A simple CLI tool that shows the top N most frequent words in one or more files.
 
