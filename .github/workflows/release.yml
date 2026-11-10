@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       # Uses the matching "## [x.y.z]" section of CHANGELOG.md as the release notes
-      - uses: taiki-e/create-gh-release-action@eba8ea96c86cca8a37f1b56e94b4d13301fba651 # v1.11.0
+      - uses: taiki-e/create-gh-release-action@045e5c0ed9c50cc1f96de7e891a09ad3daea245f # v1.12.0
         with:
           changelog: CHANGELOG.md
           token: ${{ secrets.GITHUB_TOKEN }}
