@@ -6,6 +6,15 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-17
+
+### Changed
+
+- README is shorter: reference details and diagrams are in collapsible sections.
+- New benchmark chart: time and peak memory against input size (4 to 35 MB),
+  compared with `tr | sort | uniq -c | sort -rn`. `benches/compare.sh` reruns it
+  and `benches/plot.py` draws it.
+
 ## [0.2.0] - 2026-10-27
 
 ### Changed
@@ -31,6 +40,7 @@ First release, published on crates.io as `wfreq`. In this version the command is
 - Unit, integration, property (proptest) and doc tests; criterion benchmarks.
 - CI: fmt, clippy with warnings denied, tests, rustdoc and minimum Rust version 1.88.
 
-[Unreleased]: https://github.com/yashksaini-coder/wordfreq/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/yashksaini-coder/wordfreq/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/yashksaini-coder/wordfreq/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/yashksaini-coder/wordfreq/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/yashksaini-coder/wordfreq/releases/tag/v0.1.0

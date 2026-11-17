@@ -113,8 +113,8 @@ A wrong flag is reported by clap with exit code 2.
 ## Benchmarks
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/bench-dark.svg">
-  <img alt="Two scatter plots against input size, 4 to 35 MB. Time: wfreq 48 to 361 ms, the Unix pipeline 57 to 522 ms. Peak memory: wfreq 9 to 37 MiB, the pipeline 107 to 824 MiB." src="docs/images/bench-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/yashksaini-coder/wordfreq/raw/HEAD/docs/images/bench-dark.svg?sanitize=true">
+  <img alt="Two scatter plots against input size, 4 to 35 MB. Time: wfreq 48 to 361 ms, the Unix pipeline 57 to 522 ms. Peak memory: wfreq 9 to 37 MiB, the pipeline 107 to 824 MiB." src="https://github.com/yashksaini-coder/wordfreq/raw/HEAD/docs/images/bench-light.svg?sanitize=true">
 </picture>
 
 wfreq counts with a hash map, while the classic `tr | sort | uniq -c | sort -rn` pipeline sorts every word. On 35 MB of English text wfreq is **1.4x faster** and uses **22x less memory** (37 MiB vs 824 MiB), and both gaps grow with the input.
